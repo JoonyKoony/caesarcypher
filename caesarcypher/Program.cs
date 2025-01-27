@@ -7,6 +7,11 @@ public static class CaesarCipher
 
     public static string Encode(string message, int shift)
     {
+        if (shift == 26)
+        {
+            shift += 1;
+        }
+
         char[] msgToEncode = message.ToCharArray();
         shiftAmount = shift % 26;
 
