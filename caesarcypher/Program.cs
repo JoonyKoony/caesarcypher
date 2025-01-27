@@ -12,46 +12,23 @@ public static class CaesarCipher
 
         for (int i = 0; i < msgToEncode.Length; i++)
         {
-            if (msgToEncode[i] == 'Z' || msgToEncode[i] == 'z')
+            if (!char.IsWhiteSpace(msgToEncode[i]) && !char.IsDigit(msgToEncode[i]))
             {
-                msgToEncode[i] = WrapAround(msgToEncode[i], shift);
+                WrapAround(shift, msgToEncode, i);
             }
-            else if (!char.IsWhiteSpace(msgToEncode[i]) && !char.IsDigit(msgToEncode[i]))
-            {
-                WrapAroundBackwards(shift, msgToEncode, i);
-            }
-
         }
         return new string(msgToEncode);
     }
 
-    private static void WrapAroundBackwards(int shift, char[] msgToEncode, int i)
+    private static void WrapAround(int shift, char[] msgToEncode, int i)
     {
-        if ((msgToEncode[i] + shift < 'A' && msgToEncode[i] + shift > 'z') || (msgToEncode[i] + shift > 'Z' && msgToEncode[i] + shift < 'a'))
+        if (char.IsUpper(msgToEncode[i])) // For uppercase letters
         {
-            msgToEncode[i] = WrapAround(msgToEncode[i], shift);
+            msgToEncode[i] = (char)((msgToEncode[i] - 'A' + shift + 26) % 26 + 'A');
         }
-        else
+        else if (char.IsLower(msgToEncode[i])) // For lowercase letters
         {
-            msgToEncode[i] = (char)((char)msgToEncode[i] + shift);
-        }
-    }
-
-
-    public static char WrapAround(char message, int shift)
-    {
-        if (char.IsUpper(message)) // For uppercase letters
-        {
-            return (char)((message - 'A' + shift + 26) % 26 + 'A');
-        }
-        else if (char.IsLower(message)) // For lowercase letters
-        {
-            return (char)((message - 'a' + shift + 26) % 26 + 'a');
-        }
-        else
-        {
-            // Non-alphabetic characters are not shifted
-            return message;
+            msgToEncode[i] = (char)((msgToEncode[i] - 'a' + shift + 26) % 26 + 'a');
         }
     }
 
@@ -62,18 +39,14 @@ public static class CaesarCipher
 
         for (int i = 0; i < msgToDecode.Length; i++)
         {
-            if (msgToDecode[i] == 'Z' || msgToDecode[i] == 'z')
+            if (!char.IsWhiteSpace(msgToDecode[i]) && !char.IsDigit(msgToDecode[i]))
             {
-                msgToDecode[i] = WrapAround(msgToDecode[i], unShift);
+                WrapAround(unShift, msgToDecode, i);
             }
-            else if (!char.IsWhiteSpace(msgToDecode[i]) && !char.IsDigit(msgToDecode[i]))
-            {
-                WrapAroundBackwards(unShift, msgToDecode, i);
-            }
-
         }
         return new string(msgToDecode);
     }
+
 
     public static string Crack(string encodedMessage)
     {
@@ -81,9 +54,7 @@ public static class CaesarCipher
         throw new NotImplementedException();
     }
 
-    // Optional: Add helper methods here (e.g., for handling edge cases)
 }
-
 
 
 class Program
