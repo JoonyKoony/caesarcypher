@@ -3,13 +3,7 @@ using System;
 
 public static class CaesarCipher
 {
-    //private string encodedCypher;
 
-    //private string decodedCypher;
-
-    // private string uncodedCyhper;
-
-    // Public Methods
     public static string Encode(string message, int shift)
     {
         char[] msgToEncode = message.ToCharArray();
@@ -22,14 +16,14 @@ public static class CaesarCipher
             }
             else if (!char.IsWhiteSpace(msgToEncode[i]) && !char.IsDigit(msgToEncode[i]))
             {
-                NewMethod(shift, msgToEncode, i);
+                WrapAroundBackwards(shift, msgToEncode, i);
             }
 
         }
         return new string(msgToEncode);
     }
 
-    private static void NewMethod(int shift, char[] msgToEncode, int i)
+    private static void WrapAroundBackwards(int shift, char[] msgToEncode, int i)
     {
         if ((msgToEncode[i] + shift < 'A' && msgToEncode[i] + shift > 'z') || (msgToEncode[i] + shift > 'Z' && msgToEncode[i] + shift < 'a'))
         {
