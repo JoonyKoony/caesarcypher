@@ -3,14 +3,16 @@ using System;
 
 public static class CaesarCipher
 {
+    private static int shiftAmount;
 
     public static string Encode(string message, int shift)
     {
         char[] msgToEncode = message.ToCharArray();
+        shiftAmount = shift;
 
         for (int i = 0; i < msgToEncode.Length; i++)
         {
-            if (msgToEncode[i] == 'A' || msgToEncode[i] == 'a' || msgToEncode[i] == 'Z' || msgToEncode[i] == 'z')
+            if (msgToEncode[i] == 'Z' || msgToEncode[i] == 'z')
             {
                 msgToEncode[i] = WrapAround(msgToEncode[i], shift);
             }
@@ -53,10 +55,24 @@ public static class CaesarCipher
         }
     }
 
-    public static string Decode(string message, int shift)
+    public static string Decode(string message)
     {
-        // Implement decoding logic here
-        throw new NotImplementedException();
+        char[] msgToDecode = message.ToCharArray();
+        int unShift = -shiftAmount;
+
+        for (int i = 0; i < msgToDecode.Length; i++)
+        {
+            if (msgToDecode[i] == 'Z' || msgToDecode[i] == 'z')
+            {
+                msgToDecode[i] = WrapAround(msgToDecode[i], unShift);
+            }
+            else if (!char.IsWhiteSpace(msgToDecode[i]) && !char.IsDigit(msgToDecode[i]))
+            {
+                WrapAroundBackwards(unShift, msgToDecode, i);
+            }
+
+        }
+        return new string(msgToDecode);
     }
 
     public static string Crack(string encodedMessage)
@@ -99,7 +115,7 @@ class Program
 
             string encoded = CaesarCipher.Encode(input, shift);
             Console.WriteLine($"Encoded string: {encoded}");
-            string decoded = CaesarCipher.Decode(encoded, shift);
+            string decoded = CaesarCipher.Decode(encoded);
             Console.WriteLine($"Decoded string: {decoded}");
         }
     }
