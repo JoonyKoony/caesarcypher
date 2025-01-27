@@ -8,13 +8,13 @@ public static class CaesarCipher
     public static string Encode(string message, int shift)
     {
         char[] msgToEncode = message.ToCharArray();
-        shiftAmount = shift;
+        shiftAmount = shift % 26;
 
         for (int i = 0; i < msgToEncode.Length; i++)
         {
             if (!char.IsWhiteSpace(msgToEncode[i]) && !char.IsDigit(msgToEncode[i]))
             {
-                WrapAround(shift, msgToEncode, i);
+                WrapAround(shiftAmount, msgToEncode, i);
             }
         }
         return new string(msgToEncode);
@@ -35,7 +35,7 @@ public static class CaesarCipher
     public static string Decode(string message)
     {
         char[] msgToDecode = message.ToCharArray();
-        int unShift = -shiftAmount;
+        int unShift = -shiftAmount % 26;
 
         for (int i = 0; i < msgToDecode.Length; i++)
         {
