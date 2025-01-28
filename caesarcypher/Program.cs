@@ -5,16 +5,8 @@ public static class CaesarCipher
 {
     private static int shiftAmount;
 
-    public static string Encode(string message, int shift)
+    private static string ShiftLetters(char[] msgToEncode)
     {
-        if (shift == 26)
-        {
-            shift += 1;
-        }
-
-        char[] msgToEncode = message.ToCharArray();
-        shiftAmount = shift % 26;
-
         for (int i = 0; i < msgToEncode.Length; i++)
         {
             if (!char.IsWhiteSpace(msgToEncode[i]) && !char.IsDigit(msgToEncode[i]))
@@ -22,7 +14,21 @@ public static class CaesarCipher
                 WrapAround(shiftAmount, msgToEncode, i);
             }
         }
+
         return new string(msgToEncode);
+    }
+    
+    private static string UnShiftLetters(char[] msgToDecode, int unShift)
+    {
+        for (int i = 0; i < msgToDecode.Length; i++)
+        {
+            if (!char.IsWhiteSpace(msgToDecode[i]) && !char.IsDigit(msgToDecode[i]))
+            {
+                WrapAround(unShift, msgToDecode, i);
+            }
+        }
+
+        return new string(msgToDecode);
     }
 
     private static void WrapAround(int shift, char[] msgToEncode, int i)
@@ -36,23 +42,29 @@ public static class CaesarCipher
             msgToEncode[i] = (char)((msgToEncode[i] - 'a' + shift + 26) % 26 + 'a');
         }
     }
+    
+    public static string Encode(string message, int shift)
+    {
+        if (shift == 26)
+        {
+            shift += 1;
+        }
+
+        char[] msgToEncode = message.ToCharArray();
+        shiftAmount = shift % 26;
+
+        return ShiftLetters(msgToEncode);
+    }
 
     public static string Decode(string message)
     {
         char[] msgToDecode = message.ToCharArray();
         int unShift = -shiftAmount % 26;
 
-        for (int i = 0; i < msgToDecode.Length; i++)
-        {
-            if (!char.IsWhiteSpace(msgToDecode[i]) && !char.IsDigit(msgToDecode[i]))
-            {
-                WrapAround(unShift, msgToDecode, i);
-            }
-        }
-        return new string(msgToDecode);
+        return UnShiftLetters(msgToDecode, unShift);
     }
 
-
+    
     public static string Crack(string encodedMessage)
     {
         // Implement code cracking logic here

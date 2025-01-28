@@ -98,6 +98,7 @@ public class CaesarCipherTests
     [InlineData("Uifsf jt b tfdsfu nfttbhf", 1, "There is a secret message")]
     [InlineData("Wklv lv d whvw phvvdjh", 3, "This is a test message")]
     [InlineData("Khoor Zruog", 3, "Hello World")]
+    
     public void Decode_ShouldReturnOriginalMessage_WhenGivenEncodedMessageAndShift(string encodedMessage, int shift, string expected)
     {
         // Arrange
